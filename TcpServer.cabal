@@ -1,0 +1,34 @@
+Name:                TcpServer
+Version:             0.1
+Synopsis:            Small Concurrent TCP Server
+Description:         TCP Server 
+License:             BSD3
+License-file:        LICENSE
+Author:              Alexander V Vershilov
+Maintainer:          avershilov@trxline.ru
+Category:            Network
+Build-type:          Simple
+Extra-source-files:  README, ChangeLog
+Cabal-version:       >=1.2
+
+
+Library
+  -- Modules exported by the library.
+  Exposed-modules:     Network.Server.Concurrent
+   
+  -- Packages needed in order to build this package.
+  Build-depends:      base
+                    , transformers       >= 0.2  && <0.3
+                    , enumerator         >= 0.4  && <0.5
+                    , network            >= 2.3  && <2.4
+                    , network-enumerator >= 0.1  && <0.2
+                    , bytestring         >= 0.9  && <1.0
+                    , mtl 
+  
+  -- Modules not exported by this package.
+  -- Other-modules:       
+  
+  -- Extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
+  -- Build-tools:         
+  hs-source-dirs: src/
+  
