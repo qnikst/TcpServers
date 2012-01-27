@@ -64,7 +64,7 @@ type Request = ByteString
 -- | Responce type
 -- TODO: add Command to Server
 -- smth like data Responce = Send L.ByteString | Stop | ...
-type Responce = L.ByteString 
+type Responce = ByteString 
 
 -- | Application type
 type Application = MonadIO m => E.Enumeratee Request Responce m b
@@ -126,7 +126,7 @@ serveConnection settings onException port app conn remoteHost' = do
 type Port = Int
 
 bindPort :: Int -> String -> IO Socket
-bindPort _ _ | trace ">bindPort" False = undefined 
+--bindPort _ _ | trace ">bindPort" False = undefined 
 bindPort p s = do
     let hints = defaultHints { addrFlags = [ AI_PASSIVE
                                            , AI_NUMERICSERV

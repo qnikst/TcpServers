@@ -1,0 +1,3 @@
+0.2
+	Api changed: Responce -> Response (by Antoine Latter)
+	Response type switched back to Strict ByteString
