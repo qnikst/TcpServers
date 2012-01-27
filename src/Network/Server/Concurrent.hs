@@ -21,7 +21,7 @@ module Network.Server.Concurrent
     -- * Datatypes
     Application,
     Request,
-    Responce,
+    Response,
     -- * Run server
     run,
     runSettings,
@@ -61,13 +61,13 @@ import Control.Monad.Trans (MonadIO (..))
 -- | Request type
 type Request = ByteString
 
--- | Responce type
+-- | Response type
 -- TODO: add Command to Server
--- smth like data Responce = Send L.ByteString | Stop | ...
-type Responce = ByteString 
+-- smth like data Response = Send ByteString | Stop | ...
+type Response = ByteString 
 
 -- | Application type
-type Application = MonadIO m => E.Enumeratee Request Responce m b
+type Application = MonadIO m => E.Enumeratee Request Response m b
 
 data Settings = Settings 
     { settingsHost   :: String -- ^ Host to bind to, or * for all. Default: *
@@ -113,15 +113,15 @@ runSettingsSocket set socket app = do
 serveConnection settings onException port app conn remoteHost' = do
     catch 
         (finally 
-            (E.run_ $ enumSocket bytesPerRead conn $= app $$ sendResponces conn)
+            (E.run_ $ enumSocket bytesPerRead conn $= app $$ sendResponses conn)
             (sClose conn))
         onException
     where
-        sendResponces :: MonadIO m => Socket -> E.Iteratee ByteString m ()
-        sendResponces socket = do
+        sendResponses :: MonadIO m => Socket -> E.Iteratee ByteString m ()
+        sendResponses socket = do
           resp <- EB.consume
           when (not $ L.null resp) $ liftIO (Sock.sendMany socket $ L.toChunks resp)
-          sendResponces socket
+          sendResponses socket
 
 type Port = Int
 
