@@ -49,6 +49,7 @@ import Control.Exception
 
 import Data.Enumerator (($$),(>>==),($=))
 import qualified Data.Enumerator as E
+import qualified Data.Enumerator.List as EL
 import qualified Data.Enumerator.Binary as EB
 
 import Control.Concurrent (forkIO)
@@ -119,14 +120,17 @@ serveConnection settings onException port app conn remoteHost' = do
     where
         sendResponses :: MonadIO m => Socket -> E.Iteratee ByteString m ()
         sendResponses socket = do
-          resp <- EB.consume
-          when (not $ L.null resp) $ liftIO (Sock.sendMany socket $ L.toChunks resp)
-          sendResponses socket
+          r <- EL.head
+          case r of
+            Just resp -> do
+                liftIO $ print resp
+                when (not $ S.null resp) $ liftIO (Sock.sendMany socket [resp] {-$ S.toChunks resp-})
+                sendResponses socket
+            Nothing -> sendResponses socket
 
 type Port = Int
 
 bindPort :: Int -> String -> IO Socket
---bindPort _ _ | trace ">bindPort" False = undefined 
 bindPort p s = do
     let hints = defaultHints { addrFlags = [ AI_PASSIVE
                                            , AI_NUMERICSERV

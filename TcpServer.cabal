@@ -24,6 +24,8 @@ Library
                     , network-enumerator >= 0.1  && <0.2
                     , bytestring         >= 0.9  && <1.0
                     , mtl 
+                    , text
+                    , iteratee           >= 0.8  && <0.9
   
   -- Modules not exported by this package.
   -- Other-modules:       
